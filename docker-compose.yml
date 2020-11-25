@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:9.6
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: strongloop
+      POSTGRES_PASSWORD: strongloop
+    ports:
+      - '5432:5432'

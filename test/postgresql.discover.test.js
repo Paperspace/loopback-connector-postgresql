@@ -22,7 +22,7 @@ describe('discoverModels', function () {
 
       db.discoverModelDefinitions({
         views: true,
-        limit: 3
+        limit: 1000
       }, function (err, models) {
         if (err) {
           console.error(err);
@@ -74,7 +74,7 @@ describe('Discover models including other users', function () {
 
     db.discoverModelDefinitions({
       all: true,
-      limit: 3
+      limit: 1000
     }, function (err, models) {
       if (err) {
         console.error(err);
@@ -197,20 +197,6 @@ describe('Discover LDL schema from a table', function () {
       assert(schema.properties.total);
       assert(schema.properties.total.type === 'Number');
       done(null, schema);
-    });
-  });
-});
-
-describe('Discover and build models', function() {
-  it('should build a model from discovery', function(done) {
-
-    db.discoverAndBuildModels('GeoPoint', {schema: 'strongloop'}, function(err, schema) {
-      schema.Geopoint.find(function(err, data) {
-        assert(!err);
-        assert(Array.isArray(data));
-        assert(data[0].location);
-        done();
-      });
     });
   });
 });
