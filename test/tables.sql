@@ -1,4 +1,6 @@
-﻿set search_path to "strongloop",public;
+create schema "strongloop";
+set search_path to "strongloop",public;
+alter role strongloop set search_path TO "strongloop",public;
 drop table if exists "customer" cascade;
 drop table if exists "session" cascade;
 drop table if exists "location" cascade;

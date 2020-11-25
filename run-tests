@@ -1,4 +1,48 @@
 #!/bin/bash
-ROOT=`dirname $0`
-$ROOT/node_modules/.bin/mocha --timeout 10000 --require $ROOT/test/init.js $ROOT/test/*.test.js
 
+set -e
+
+export CI=1
+
+export PGHOST=127.0.0.1
+export PGDATABASE=test
+export PGPORT=5432
+export PGUSER=strongloop
+export PGPASSWORD=strongloop
+
+export TEST_POSTGRESQL_HOST=$PGHOST
+export TEST_POSTGRESQL_PORT=$PGPORT
+export TEST_POSTGRESQL_USER=$PGUSER
+export TEST_POSTGRESQL_PASSWORD=$PGPASSWORD
+
+cleanup() {
+  docker-compose down -v || :
+}
+
+trap cleanup ERR EXIT
+
+cleanup
+
+docker-compose up -d
+
+for i in {1..60}; do
+  if psql -c 'select 1' &>/dev/null; then
+    break
+  fi
+  if [[ $i -gt 10 ]]; then
+    echo "Waiting on postgres to start...."
+  fi
+  sleep 1
+done
+
+cat test/tables.sql | psql >/dev/null
+
+run() {
+  ./node_modules/.bin/mocha --timeout 10000 --require ./test/init.js "$@"
+}
+
+if [[ -n "$@" ]]; then
+  run "$@"
+else
+  run ./test/*.test.js
+fi

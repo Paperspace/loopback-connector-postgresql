@@ -46,8 +46,8 @@ describe('filter undefined fields', function () {
                 should.not.exist(p.first);
                 should.not.exist(p.second);
                 should.not.exist(p.third);
+                done();
             })
-            done();
         })
     });
 
@@ -63,8 +63,8 @@ describe('filter undefined fields', function () {
                 should.not.exist(p.second);
                 should.exist(p.third);
                 p.third.should.be.equal(3);
+                done();
             })
-            done();
         })
     });
 
